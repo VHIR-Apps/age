@@ -1,9 +1,10 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home', icon: '🏠', iconBn: 'হোম' },
@@ -24,29 +25,16 @@ const BOTTOM_NAV = [
 ];
 
 function LogoImg() {
-  const [err, setErr] = useState(false);
-
-  if (err) {
-    return (
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 shadow-lg shadow-teal-500/20">
-        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-          <circle cx="12" cy="12" r="10" strokeWidth={1.5} />
-        </svg>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-lg shadow-teal-500/20">
+    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-sky-400/40 bg-[#071329] shadow-lg shadow-sky-500/25">
       <Image
-        src="/assets/logo.png"
-        alt="VHIR Tech Logo"
+        src="/assets/app-logo.svg"
+        alt="Age Calculator BD Logo"
         width={40}
         height={40}
-        className="h-full w-full object-cover"
+        unoptimized
+        className="h-full w-full object-contain p-0.5"
         priority
-        onError={() => setErr(true)}
       />
     </div>
   );
@@ -76,53 +64,58 @@ export default function Header() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
 
           {/* Logo */}
-          <Link href="/" className="group flex items-center gap-2.5" aria-label="VHIR Tech Home">
+          <Link href="/" className="group flex items-center gap-2.5" aria-label="Age Calculator BD Home">
             <LogoImg />
             <div className="flex flex-col leading-tight">
-              <span className="text-base font-bold tracking-tight text-white">
-                VHIR <span className="text-teal-400">Tech</span>
+              <span className="text-base font-extrabold tracking-tight text-white group-hover:text-sky-300 transition-colors">
+                Age Calculator <span className="bg-gradient-to-r from-sky-400 to-teal-300 bg-clip-text text-transparent">BD</span>
               </span>
-              <span className="text-[9px] tracking-widest text-slate-500 uppercase">
-                Age Calculator BD
+              <span className="text-[9px] tracking-wider text-slate-400 uppercase font-medium">
+                স্মার্ট বয়স ও চাকরি ট্র্যাকার
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                  pathname === link.href
-                    ? 'bg-teal-500/15 text-teal-400'
-                    : 'text-slate-400 hover:bg-slate-700/40 hover:text-teal-400'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex items-center gap-2">
+            <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+                    pathname === link.href
+                      ? 'bg-teal-500/15 text-teal-400'
+                      : 'text-slate-400 hover:bg-slate-700/40 hover:text-teal-400'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="inline-flex items-center justify-center rounded-xl bg-slate-800/50 p-2.5 text-slate-400 transition-colors hover:bg-slate-700/50 hover:text-white lg:hidden"
-            aria-label="Toggle menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? (
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
+            {/* Theme Toggle (Light / Dark) */}
+            <ThemeToggle />
+
+            {/* Mobile Menu Button */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="inline-flex items-center justify-center rounded-xl bg-slate-800/50 p-2.5 text-slate-400 transition-colors hover:bg-slate-700/50 hover:text-white lg:hidden"
+              aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? (
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Dropdown */}

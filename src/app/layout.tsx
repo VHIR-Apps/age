@@ -62,20 +62,32 @@ export const metadata: Metadata = {
     images: [`${BASE_URL}/assets/og-image.png`],
   },
   icons: {
-    icon: '/assets/favicon.ico',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/assets/app-logo.png', type: 'image/png' },
+      { url: '/favicon.ico' },
+    ],
+    shortcut: '/favicon.svg',
     apple: '/assets/apple-touch-icon.png',
   },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="alternate icon" href="/favicon.ico" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){}})()`,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <JsonLd />
       </head>
-      <body className="min-h-screen bg-[#0A1628] text-slate-100 antialiased">
+      <body className="min-h-screen text-slate-100 antialiased">
         {children}
       </body>
     </html>

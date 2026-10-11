@@ -1,6 +1,6 @@
 /**
  * Fascinating Facts Generator — 20+ Facts
- * Removed: Zodiac Sign, Chinese Zodiac, Birth Stone, Life Path Number, Birth Flower
+ * 100% Halal Islamic & Natural Milestones
  */
 
 import type { AgeResult } from './calculator';
@@ -44,13 +44,13 @@ function estimateDistanceWalked(totalDays: number): string {
 }
 
 function estimateBloodPumped(totalDays: number): string {
-  const liters = totalDays * 24 * 60 * 5 / 1000;
-  if (liters >= 1000) return `~${(liters / 1000).toFixed(0)}K Liters`;
+  const liters = totalDays * 24 * 60 * 5;
+  if (liters >= 1_000_000) return `~${(liters / 1_000_000).toFixed(1)} Million Liters`;
   return `~${Math.round(liters).toLocaleString()} Liters`;
 }
 
 function estimateNailsGrowth(totalDays: number): string {
-  const cm = (totalDays * 0.1).toFixed(1);
+  const cm = (totalDays * 0.01).toFixed(1);
   return `~${cm} cm`;
 }
 
@@ -88,7 +88,8 @@ function estimateBlinks(totalDays: number): string {
 }
 
 function estimateSkinCells(totalDays: number): string {
-  const cells = totalDays * 30000;
+  const cells = totalDays * 24 * 60 * 35000;
+  if (cells >= 1_000_000_000_000) return `${(cells / 1_000_000_000_000).toFixed(1)} Trillion`;
   if (cells >= 1_000_000_000) return `${(cells / 1_000_000_000).toFixed(1)} Billion`;
   return `${(cells / 1_000_000).toFixed(0)} Million`;
 }

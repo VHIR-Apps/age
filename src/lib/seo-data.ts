@@ -16,7 +16,7 @@ export const faqData: FAQItem[] = [
   {
     question: 'What is the age limit for BD government jobs in 2025?',
     answer:
-      'The general age limit for Bangladesh government jobs is 30 years. For freedom fighter quota, small ethnic groups, and disabled quota, the age limit is 32 years. For teacher registration (NTRCA), the age limit is 35 years. For defense forces (Army, Navy, Air Force), the age limit is 25 years. Use our Job Quota Tracker to see your exact eligibility countdown for all 30+ job categories.',
+      'The general age limit for Bangladesh government jobs is 32 years under the latest government ordinance (raised from 30 years). For freedom fighter quota, small ethnic groups, and disabled quota, the age limit is also 32 years. For teacher registration (NTRCA), the age limit is 35 years. For defense forces (Army, Navy, Air Force), the age limit is 25 years. Use our Job Quota Tracker to see your exact eligibility countdown for all 30+ job categories.',
   },
   {
     question: 'How many days until my next birthday?',
@@ -26,7 +26,7 @@ export const faqData: FAQItem[] = [
   {
     question: 'What is the freedom fighter quota age limit for BCS?',
     answer:
-      'For BCS (Bangladesh Civil Service) exams, the general age limit is 30 years, while children of freedom fighters get an extended age limit of 32 years. Our calculator shows exactly how much time you have left before reaching the age limit.',
+      'For BCS (Bangladesh Civil Service) exams, the general age limit and quota age limits are 32 years under the latest ordinance. Our calculator shows exactly how much time you have left before reaching the age limit.',
   },
   {
     question: 'What is the age limit for Bangladesh Army, Navy, and Air Force?',
@@ -41,12 +41,12 @@ export const faqData: FAQItem[] = [
   {
     question: 'Can I calculate my age in Bangla?',
     answer:
-      'Yes! Our Age Calculator BD supports both English and Bangla (বাংলা) interfaces. All results, including zodiac signs, seasons, job quota information, and fascinating facts, are available in Bangla for your convenience.',
+      'Yes! Our Age Calculator BD supports both English and Bangla (বাংলা) interfaces. All results, including passed Fridays, Ramadans, seasons, job quota information, and fascinating facts, are available in Bangla for your convenience.',
   },
   {
     question: 'What fascinating facts can I learn about my age?',
     answer:
-      'Our calculator generates 25+ personalized facts including total heartbeats, breaths taken, distance walked, meals eaten, sleep hours, blood pumped, hair growth, nail growth, words spoken, dreams, eye blinks, zodiac sign, Chinese zodiac, birth stone, birth flower, life path number, and more.',
+      'Our calculator generates 25+ personalized facts including total heartbeats, breaths taken, distance walked, meals eaten, sleep hours, blood pumped, hair growth, nail growth, words spoken, eye blinks, passed Fridays, blessed Ramadans, full moons, and more.',
   },
   {
     question: 'How do I calculate the difference between two dates?',
@@ -66,7 +66,7 @@ export const faqData: FAQItem[] = [
   {
     question: 'What is the age limit for government bank jobs in Bangladesh?',
     answer:
-      'For government bank positions (Sonali Bank, Agrani Bank, Janata Bank, etc.), the age limit is 30 years. For specialized banks like Bangladesh Krishi Bank (BKB) and Rajshahi Krishi Unnayan Bank (RAKUB), the age limit is also 30 years.',
+      'For government bank positions (Sonali Bank, Agrani Bank, Janata Bank, etc.), the age limit is 32 years under the updated government job age limit ordinance. For specialized banks like Bangladesh Krishi Bank (BKB) and Rajshahi Krishi Unnayan Bank (RAKUB), the age limit is also 32 years.',
   },
 ];
 
@@ -125,4 +125,57 @@ export const organizationSchema = {
     contactType: 'customer support',
     availableLanguage: ['English', 'Bengali'],
   },
+};
+
+export const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Age Calculator BD',
+  alternateName: ['VHIR Age Calculator', 'বয়স ক্যালকুলেটর বিডি', 'Age Calculator BD - VHIR Tech'],
+  url: 'https://age.vhirtech.shop',
+  inLanguage: ['en-BD', 'bn-BD'],
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://age.vhirtech.shop/?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+export const siteNavigationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Quick Navigation Actions',
+  itemListElement: [
+    {
+      '@type': 'SiteNavigationElement',
+      position: 1,
+      name: 'Age Calculator (বয়স গণনা)',
+      description: 'Calculate exact age in years, months, days, hours, and seconds',
+      url: 'https://age.vhirtech.shop/age-calculator',
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      position: 2,
+      name: 'BD Job Quota Tracker (সরকারি চাকরি কোটা)',
+      description: 'Check age limits and countdown for 30+ BD government job categories',
+      url: 'https://age.vhirtech.shop/job-quota-tracker',
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      position: 3,
+      name: 'Birthday Countdown (পরবর্তী জন্মদিন)',
+      description: 'Live countdown to your next birthday with progress bar',
+      url: 'https://age.vhirtech.shop/birthday-countdown',
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      position: 4,
+      name: 'Date Difference Calculator (তারিখ পার্থক্য)',
+      description: 'Find difference between two dates including weekdays and weekends',
+      url: 'https://age.vhirtech.shop/date-difference',
+    },
+  ],
 };

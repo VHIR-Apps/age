@@ -3,6 +3,7 @@ import Footer from '@/components/Footer';
 import AdSlot from '@/components/AdSlot';
 import AgeCalculator from '@/components/AgeCalculator';
 import FAQSection from '@/components/FAQSection';
+import JobAgeLimitTable from '@/components/JobAgeLimitTable';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -18,27 +19,19 @@ export default function HomePage() {
         <section className="py-8 sm:py-14" aria-labelledby="hero-heading">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="text-center">
-              <div className="mb-6 flex justify-center" aria-hidden="true">
-                <svg className="animate-rotate-slow h-16 w-16 text-teal-400/30 sm:h-20 sm:w-20" viewBox="0 0 100 100" fill="none">
-                  <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="0.5" />
-                  <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="0.5" />
-                  <circle cx="50" cy="50" r="25" stroke="currentColor" strokeWidth="0.5" />
-                  <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" strokeWidth="0.5" />
-                  <line x1="5" y1="50" x2="95" y2="50" stroke="currentColor" strokeWidth="0.5" />
-                  <line x1="15" y1="15" x2="85" y2="85" stroke="currentColor" strokeWidth="0.3" />
-                  <line x1="85" y1="15" x2="15" y2="85" stroke="currentColor" strokeWidth="0.3" />
-                  <circle cx="50" cy="50" r="3" fill="currentColor" />
-                </svg>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-3.5 py-1 text-xs font-semibold text-teal-300 shadow-lg shadow-teal-500/10">
+                <span className="flex h-2 w-2 rounded-full bg-teal-400 animate-ping" />
+                🇧🇩 বাংলাদেশ সরকারি চাকরি ও বয়সসীমা ট্র্যাকার ২০২৫-২৬
               </div>
-              <h1 id="hero-heading" className="mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 id="hero-heading" className="mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl leading-tight">
                 Age Calculator{' '}
-                <span className="bg-gradient-to-r from-teal-400 to-teal-300 bg-clip-text text-transparent">BD</span>
+                <span className="bg-gradient-to-r from-teal-400 via-sky-300 to-teal-200 bg-clip-text text-transparent">BD</span>
               </h1>
-              <p className="mx-auto mb-3 max-w-2xl text-base text-slate-300 sm:text-lg">
+              <p className="mx-auto mb-2 max-w-2xl text-base text-slate-300 sm:text-lg font-medium">
                 Smart Online Tool for Precise Age Calculation &amp; BD Government Job Quota Tracking
               </p>
-              <p className="mx-auto max-w-xl text-sm text-slate-400">
-                আপনার সঠিক বয়স গণনা করুন — বছর, মাস, দিন, ঘণ্টা, মিনিট ও সেকেন্ডে। বাংলাদেশ সরকারি চাকরির বয়সসীমা ট্র্যাক করুন ৩০+ ক্যাটাগরিতে।
+              <p className="mx-auto max-w-xl text-xs sm:text-sm text-slate-400 leading-relaxed">
+                আপনার সঠিক বয়স গণনা করুন — বছর, মাস, দিন, ঘণ্টা, মিনিট ও সেকেন্ডে। সর্বশেষ সরকারি অধ্যাদেশ (৩২ বছর) অনুযায়ী ৩০+ ক্যাটাগরিতে যোগ্যতা ট্র্যাক করুন।
               </p>
             </div>
           </div>
@@ -64,7 +57,7 @@ export default function HomePage() {
             </h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { href: '/age-calculator', icon: '🧮', title: 'Age Calculator', titleBn: 'বয়স ক্যালকুলেটর', desc: 'Calculate your exact age in years, months, days, hours, minutes & seconds with birth details, zodiac, and more.' },
+                { href: '/age-calculator', icon: '🧮', title: 'Age Calculator', titleBn: 'বয়স ক্যালকুলেটর', desc: 'Calculate your exact age in years, months, days, hours, minutes & seconds with life milestones, Islamic stats, and more.' },
                 { href: '/job-quota-tracker', icon: '💼', title: 'Job Quota Tracker', titleBn: 'জব কোটা ট্র্যাকার', desc: 'Track eligibility for 30+ BD government job categories including BCS, bank, defense, police, and more.' },
                 { href: '/birthday-countdown', icon: '🎂', title: 'Birthday Countdown', titleBn: 'জন্মদিন কাউন্টডাউন', desc: 'Live countdown to your next birthday with days, hours, minutes, seconds and a beautiful progress bar.' },
                 { href: '/date-difference', icon: '📅', title: 'Date Difference', titleBn: 'তারিখ পার্থক্য', desc: 'Calculate the exact difference between any two dates in years, months, days, hours, and minutes.' },
@@ -109,59 +102,7 @@ export default function HomePage() {
         {/* ===== BD JOB AGE LIMIT TABLE ===== */}
         <section className="py-8 sm:py-12" aria-labelledby="job-info-heading">
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
-            <div className="glass-card rounded-2xl p-6 sm:p-8">
-              <h2 id="job-info-heading" className="mb-4 text-center text-xl font-bold text-white sm:text-2xl">
-                📋 BD Government Job Age Limits (2025)
-              </h2>
-              <p className="mb-6 text-center text-sm text-slate-400">বাংলাদেশ সরকারি চাকরির বয়সসীমা — সর্বশেষ তথ্য</p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-700/30">
-                      <th className="px-3 py-2 text-left text-xs font-semibold text-teal-400 uppercase">Category</th>
-                      <th className="px-3 py-2 text-left text-xs font-semibold text-teal-400 uppercase">Job Type</th>
-                      <th className="px-3 py-2 text-left text-xs font-semibold text-teal-400 uppercase">Age Limit</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-700/20">
-                    {[
-                      ['Government', 'General (সাধারণ)', '30 years'],
-                      ['Government', 'Freedom Fighter (মুক্তিযোদ্ধা)', '32 years'],
-                      ['Government', 'Disabled (প্রতিবন্ধী)', '32 years'],
-                      ['Government', 'Small Ethnic (ক্ষুদ্র নৃ-গোষ্ঠী)', '32 years'],
-                      ['BCS', 'BCS General (বিসিএস)', '30 years'],
-                      ['BCS', 'BCS Freedom Fighter', '32 years'],
-                      ['Banking', 'Govt Bank (সরকারি ব্যাংক)', '30 years'],
-                      ['Education', 'NTRCA Teacher (নিবন্ধন)', '35 years'],
-                      ['Education', 'Govt Teacher (সরকারি শিক্ষক)', '30 years'],
-                      ['Defense', 'Army (সেনাবাহিনী)', '25 years'],
-                      ['Defense', 'Navy (নৌবাহিনী)', '25 years'],
-                      ['Defense', 'Air Force (বিমানবাহিনী)', '25 years'],
-                      ['Defense', 'BGB (বর্ডার গার্ড)', '25 years'],
-                      ['Law Enforcement', 'Police (পুলিশ)', '30 years'],
-                      ['Law Enforcement', 'RAB (র্যাব)', '30 years'],
-                      ['Health', 'Doctor BCS Health', '32 years'],
-                      ['Health', 'Nurse (নার্স)', '30 years'],
-                      ['Infrastructure', 'Railways (রেলওয়ে)', '30 years'],
-                      ['Infrastructure', 'PDB/WASA/Gas', '30 years'],
-                      ['Local Govt', 'City Corp/Municipality', '30 years'],
-                    ].map(([cat, job, age], i) => (
-                      <tr key={i} className="hover:bg-slate-700/10">
-                        <td className="px-3 py-2 text-xs text-slate-500">{cat}</td>
-                        <td className="px-3 py-2 text-slate-300">{job}</td>
-                        <td className="px-3 py-2 font-medium text-white">{age}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="mt-4 text-center text-xs text-slate-500">⚠️ Age limits are subject to government policy changes. Verify with official sources before applying.</p>
-              <div className="mt-4 text-center">
-                <Link href="/job-quota-tracker" className="btn-neon inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white">
-                  💼 Track Your Job Quota Eligibility
-                </Link>
-              </div>
-            </div>
+            <JobAgeLimitTable />
           </div>
         </section>
 

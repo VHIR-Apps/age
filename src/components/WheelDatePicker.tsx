@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -59,7 +59,7 @@ function WheelCol({ label, items, selected, onPick }: {
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
       <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-sky-400/80">{label}</span>
-      <button type="button" className="whl-btn" onClick={() => go(selected - 1)}>▲</button>
+      <button type="button" className="whl-btn" onClick={() => go(selected - 1)} aria-label={`Previous ${label}`}>▲</button>
       <div className="whl-shell w-full">
         <div className="whl-fade-t" />
         <div className="whl-bar" />
@@ -77,7 +77,7 @@ function WheelCol({ label, items, selected, onPick }: {
           })}
         </div>
       </div>
-      <button type="button" className="whl-btn" onClick={() => go(selected + 1)}>▼</button>
+      <button type="button" className="whl-btn" onClick={() => go(selected + 1)} aria-label={`Next ${label}`}>▼</button>
     </div>
   );
 }
@@ -86,7 +86,7 @@ function WheelCol({ label, items, selected, onPick }: {
 export default function WheelDatePicker({ value, onChange, maxDate }: WheelDatePickerProps) {
   const now = new Date();
   const curYear = now.getFullYear();
-  const maxD = maxDate ? new Date(`${maxDate}T00:00:00`) : null;
+  const maxD = useMemo(() => (maxDate ? new Date(`${maxDate}T00:00:00`) : null), [maxDate]);
   const years = useMemo(() => Array.from({ length: curYear - MIN_YEAR + 1 }, (_, i) => curYear - i), [curYear]);
 
   const parse = useCallback((v: string) => {
@@ -98,14 +98,22 @@ export default function WheelDatePicker({ value, onChange, maxDate }: WheelDateP
   const [y, setY] = useState(init.y);
   const [m, setM] = useState(init.m);
   const [d, setD] = useState(init.d);
+  const [prevValue, setPrevValue] = useState(value);
   const [mode, setMode] = useState<InputMode>('wheel');
   const [typeDay, setTypeDay] = useState('');
   const [typeMonth, setTypeMonth] = useState('');
   const [typeYear, setTypeYear] = useState('');
+  const [typeError, setTypeError] = useState('');
 
   const days = useMemo(() => Array.from({ length: daysIn(y, m) }, (_, i) => String(i + 1).padStart(2, '0')), [y, m]);
 
-  useEffect(() => { const p = parse(value); setY(p.y); setM(p.m); setD(p.d); }, [value, parse]);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    const p = parse(value);
+    setY(p.y);
+    setM(p.m);
+    setD(p.d);
+  }
 
   const apply = useCallback((ny: number, nm: number, nd: number) => {
     let sd = Math.min(nd, daysIn(ny, nm));
@@ -116,9 +124,25 @@ export default function WheelDatePicker({ value, onChange, maxDate }: WheelDateP
     onChange(fmt(fy, fm, fd));
   }, [maxD, onChange]);
 
+  const tryAutoApply = (newDay: string, newMonth: string, newYear: string) => {
+    const td = parseInt(newDay, 10);
+    const tm = parseInt(newMonth, 10);
+    const ty = parseInt(newYear, 10);
+    if (!isNaN(td) && !isNaN(tm) && !isNaN(ty) && newYear.length === 4) {
+      if (td >= 1 && td <= 31 && tm >= 1 && tm <= 12 && ty >= MIN_YEAR && ty <= curYear) {
+        setTypeError('');
+        apply(ty, tm - 1, td);
+      }
+    }
+  };
+
   const applyTyped = () => {
-    const td = parseInt(typeDay), tm = parseInt(typeMonth), ty = parseInt(typeYear);
-    if (!td || !tm || !ty || td < 1 || td > 31 || tm < 1 || tm > 12 || ty < MIN_YEAR || ty > curYear) return;
+    const td = parseInt(typeDay, 10), tm = parseInt(typeMonth, 10), ty = parseInt(typeYear, 10);
+    if (!td || !tm || !ty || td < 1 || td > 31 || tm < 1 || tm > 12 || ty < MIN_YEAR || ty > curYear) {
+      setTypeError(`দিন ১-৩১, মাস ১-১২ এবং বছর ${MIN_YEAR}-${curYear} এর মধ্যে দিন`);
+      return;
+    }
+    setTypeError('');
     apply(ty, tm - 1, td);
   };
 
@@ -178,7 +202,7 @@ export default function WheelDatePicker({ value, onChange, maxDate }: WheelDateP
       {mode === 'type' && (
         <div className="space-y-3">
           <p className="text-center text-[11px] text-slate-500">
-            ⌨️ নিচে দিন, মাস, বছর লিখুন
+            ⌨️ নিচে দিন, মাস, বছর লিখে Enter চাপুন
           </p>
           <div className="flex gap-2">
             <div className="flex-1">
@@ -189,7 +213,13 @@ export default function WheelDatePicker({ value, onChange, maxDate }: WheelDateP
                 placeholder="DD"
                 min="1" max="31"
                 value={typeDay}
-                onChange={(e) => setTypeDay(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setTypeDay(val);
+                  setTypeError('');
+                  tryAutoApply(val, typeMonth, typeYear);
+                }}
+                onKeyDown={(e) => { if (e.key === 'Enter') applyTyped(); }}
                 className="w-full rounded-xl border border-white/8 bg-white/5 px-3 py-3.5 text-center text-lg font-bold text-white outline-none transition-all focus:border-sky-400/40 focus:ring-2 focus:ring-sky-400/15"
               />
             </div>
@@ -201,7 +231,13 @@ export default function WheelDatePicker({ value, onChange, maxDate }: WheelDateP
                 placeholder="MM"
                 min="1" max="12"
                 value={typeMonth}
-                onChange={(e) => setTypeMonth(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setTypeMonth(val);
+                  setTypeError('');
+                  tryAutoApply(typeDay, val, typeYear);
+                }}
+                onKeyDown={(e) => { if (e.key === 'Enter') applyTyped(); }}
                 className="w-full rounded-xl border border-white/8 bg-white/5 px-3 py-3.5 text-center text-lg font-bold text-white outline-none transition-all focus:border-sky-400/40 focus:ring-2 focus:ring-sky-400/15"
               />
             </div>
@@ -213,11 +249,20 @@ export default function WheelDatePicker({ value, onChange, maxDate }: WheelDateP
                 placeholder="YYYY"
                 min={MIN_YEAR} max={curYear}
                 value={typeYear}
-                onChange={(e) => setTypeYear(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setTypeYear(val);
+                  setTypeError('');
+                  tryAutoApply(typeDay, typeMonth, val);
+                }}
+                onKeyDown={(e) => { if (e.key === 'Enter') applyTyped(); }}
                 className="w-full rounded-xl border border-white/8 bg-white/5 px-3 py-3.5 text-center text-lg font-bold text-white outline-none transition-all focus:border-sky-400/40 focus:ring-2 focus:ring-sky-400/15"
               />
             </div>
           </div>
+          {typeError && (
+            <p className="text-center text-[10px] font-medium text-rose-400">{typeError}</p>
+          )}
           <button
             type="button"
             onClick={applyTyped}

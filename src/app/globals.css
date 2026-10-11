@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 @theme {
   --color-bg-deep: #050810;
@@ -12,11 +12,15 @@ html { scroll-behavior: smooth; }
 
 body {
   min-height: 100dvh;
-  background:
-    radial-gradient(ellipse at 15% 0%, rgba(56,189,248,0.10) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 0%, rgba(139,92,246,0.10) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 100%, rgba(33,212,199,0.08) 0%, transparent 50%),
-    linear-gradient(180deg, #050810 0%, #0a1022 50%, #06091a 100%);
+  background-color: #050c1b;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(14, 165, 233, 0.20), transparent 70%),
+    radial-gradient(circle 500px at 10% 20%, rgba(29, 78, 216, 0.16), transparent 60%),
+    radial-gradient(circle 600px at 90% 15%, rgba(13, 148, 136, 0.14), transparent 60%),
+    radial-gradient(circle 800px at 50% 80%, rgba(30, 58, 138, 0.18), transparent 70%),
+    radial-gradient(rgba(56, 189, 248, 0.045) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 36px 36px;
+  background-attachment: fixed;
   color: #f1f5f9;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -192,21 +196,22 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 30px;
+  min-width: 44px;
+  height: 36px;
+  padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(14,22,44,0.8);
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(14,22,44,0.85);
   color: #94a3b8;
-  font-size: 12px;
+  font-size: 13px;
   transition: all 0.15s;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   appearance: none;
   -webkit-appearance: none;
 }
-.whl-btn:hover{color:#fff;border-color:rgba(56,189,248,0.18);background:rgba(25,35,55,0.95)}
-.whl-btn:active{transform:scale(0.95)}
+.whl-btn:hover{color:#fff;border-color:rgba(56,189,248,0.3);background:rgba(25,38,65,0.98)}
+.whl-btn:active{transform:scale(0.94)}
 
 :focus-visible{outline:2px solid #38bdf8;outline-offset:2px}
 
@@ -222,3 +227,157 @@ body {
   body{background:#fff!important;color:#000!important;padding-bottom:0!important}
   header,footer,.bottom-nav,.ad-slot{display:none!important}
 }
+
+/* ============================================
+   PREMIUM LIGHT MODE (Apple / Linear Caliber)
+   ============================================ */
+html:not(.dark) {
+  color-scheme: light;
+}
+
+html:not(.dark) body {
+  background-color: #f8fafc !important;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(14, 165, 233, 0.09), transparent 70%),
+    radial-gradient(circle 500px at 15% 20%, rgba(56, 189, 248, 0.06), transparent 60%),
+    radial-gradient(circle 500px at 85% 15%, rgba(13, 148, 136, 0.05), transparent 60%),
+    radial-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px !important;
+  background-attachment: fixed !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4 {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .app-card .text-white,
+html:not(.dark) .stat-card .text-white,
+html:not(.dark) .glass-card .text-white {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .btn-neon,
+html:not(.dark) .btn-neon * {
+  color: #020617 !important;
+}
+
+html:not(.dark) .text-slate-400,
+html:not(.dark) .text-slate-500 {
+  color: #64748b !important;
+}
+
+html:not(.dark) .text-slate-300 {
+  color: #334155 !important;
+}
+
+html:not(.dark) .glass-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .app-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .stat-card {
+  background: rgba(248, 250, 252, 0.95) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  color: #0f172a !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03) !important;
+}
+
+html:not(.dark) header {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+html:not(.dark) .bottom-nav {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-top: 1px solid rgba(226, 232, 240, 0.8) !important;
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Light Mode Input & Form Controls */
+html:not(.dark) input,
+html:not(.dark) select,
+html:not(.dark) textarea {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+html:not(.dark) input::placeholder {
+  color: #94a3b8 !important;
+}
+
+html:not(.dark) input:focus {
+  border-color: #0d9488 !important;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15) !important;
+}
+
+/* Light mode wheel picker */
+html:not(.dark) .whl-shell {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+}
+
+html:not(.dark) .whl-fade-t {
+  background: linear-gradient(to bottom, #ffffff, transparent) !important;
+}
+
+html:not(.dark) .whl-fade-b {
+  background: linear-gradient(to top, #ffffff, transparent) !important;
+}
+
+html:not(.dark) .whl-item.sel {
+  color: #0f172a !important;
+}
+
+html:not(.dark) .whl-item {
+  color: #64748b !important;
+}
+
+html:not(.dark) .whl-btn {
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+html:not(.dark) .whl-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) .tab-bar {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+html:not(.dark) .tab-bar-item {
+  color: #64748b !important;
+}
+
+html:not(.dark) .tab-bar-item.active {
+  color: #0f172a !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Ticking seconds badge in spotlight */
+html:not(.dark) .font-mono.rounded-full {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+

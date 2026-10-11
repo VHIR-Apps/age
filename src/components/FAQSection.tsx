@@ -5,6 +5,9 @@ import { faqData } from '@/lib/seo-data';
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedFaqs = showAll ? faqData : faqData.slice(0, 5);
 
   return (
     <section id="faq" className="scroll-mt-20" aria-labelledby="faq-heading">
@@ -16,7 +19,7 @@ export default function FAQSection() {
           <p className="mt-2 text-sm text-slate-400">সচরাচর জিজ্ঞাসা — আপনার প্রশ্নের উত্তর এখানে</p>
         </div>
         <div className="space-y-2" role="list">
-          {faqData.map((faq, index) => (
+          {displayedFaqs.map((faq, index) => (
             <div key={index} className="glass-card overflow-hidden rounded-xl" role="listitem">
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
@@ -36,6 +39,17 @@ export default function FAQSection() {
             </div>
           ))}
         </div>
+        {faqData.length > 5 && (
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setShowAll(!showAll)}
+              className="inline-flex items-center gap-2 rounded-xl border border-teal-500/30 bg-slate-900/80 px-5 py-2.5 text-xs sm:text-sm font-medium text-teal-300 shadow-md hover:bg-teal-500/10 hover:border-teal-500/50 transition-all active:scale-95"
+            >
+              <span>{showAll ? '▲ কম প্রশ্ন দেখুন (Show Less)' : `▼ আরও ${faqData.length - 5}টি সচরাচর জিজ্ঞাসা দেখুন (Show More)`}</span>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

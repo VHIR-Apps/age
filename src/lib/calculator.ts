@@ -25,14 +25,17 @@ export interface AgeResult {
   birthDayOfWeek: string;
   birthDayOfWeekBn: string;
   isLeapYear: boolean;
-  zodiacSign: string;
-  zodiacSignBn: string;
-  chineseZodiac: string;
-  birthStone: string;
-  birthFlower: string;
-  lifePathNumber: number;
   dayOfTheYear: number;
   daysLeftInYear: number;
+  totalFridays: number;
+  totalWeekends: number;
+  totalRamadans: number;
+  totalSunrises: number;
+  totalFullMoons: number;
+  sleepingHours: number;
+  totalMeals: number;
+  totalHeartbeats: number;
+  totalBreaths: number;
 }
 
 export interface JobQuotaResult {
@@ -68,34 +71,6 @@ export interface DateDiffResult {
 const DAYS_BN = ['রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার', 'শুক্রবার', 'শনিবার'];
 const DAYS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const ZODIAC_SIGNS: [number, number, string, string][] = [
-  [1, 20, 'Aquarius', 'কুম্ভ'], [2, 19, 'Pisces', 'মীন'],
-  [3, 20, 'Aries', 'মেষ'], [4, 20, 'Taurus', 'বৃষ'],
-  [5, 21, 'Gemini', 'মিথুন'], [6, 21, 'Cancer', 'কর্কট'],
-  [7, 23, 'Leo', 'সিংহ'], [8, 23, 'Virgo', 'কন্যা'],
-  [9, 23, 'Libra', 'তুলা'], [10, 23, 'Scorpio', 'বৃশ্চিক'],
-  [11, 22, 'Sagittarius', 'ধনু'], [12, 22, 'Capricorn', 'মকর'],
-];
-
-const CHINESE_ZODIAC = ['Monkey', 'Rooster', 'Dog', 'Pig', 'Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat'];
-const CHINESE_ZODIAC_BN = ['বানর', 'মোরগ', 'কুকুর', 'শুকর', 'ইঁদুর', 'ষাঁড়', 'বাঘ', 'খরগোশ', 'ড্রাগন', 'সাপ', 'ঘোড়া', 'ছাগল'];
-
-const BIRTH_STONES = ['', 'Garnet', 'Amethyst', 'Aquamarine', 'Diamond', 'Emerald', 'Pearl', 'Ruby', 'Peridot', 'Sapphire', 'Opal', 'Topaz', 'Turquoise'];
-const BIRTH_FLOWERS = ['', 'Carnation', 'Violet', 'Daffodil', 'Daisy', 'Lily of the Valley', 'Rose', 'Larkspur', 'Gladiolus', 'Aster', 'Marigold', 'Chrysanthemum', 'Narcissus'];
-
-function getZodiac(dateOfBirth: Date): { sign: string; signBn: string } {
-  const month = dateOfBirth.getMonth() + 1;
-  const day = dateOfBirth.getDate();
-  for (let i = 0; i < ZODIAC_SIGNS.length; i++) {
-    const [signMonth, signDay, signName, signBn] = ZODIAC_SIGNS[i];
-    const nextIndex = (i + 1) % ZODIAC_SIGNS.length;
-    if (month === signMonth && day >= signDay || month === nextIndex && day < ZODIAC_SIGNS[nextIndex][1]) {
-      return { sign: signName, signBn };
-    }
-  }
-  return { sign: 'Capricorn', signBn: 'মকর' };
-}
-
 function isLeapYear(year: number): boolean {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
@@ -106,15 +81,21 @@ function getDayOfYear(date: Date): number {
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
-function getLifePathNumber(dateOfBirth: Date): number {
-  const d = dateOfBirth.getDate();
-  const m = dateOfBirth.getMonth() + 1;
-  const y = dateOfBirth.getFullYear();
-  const reduce = (n: number): number => {
-    while (n > 9) { n = String(n).split('').reduce((a, b) => a + Number(b), 0); }
-    return n;
-  };
-  return reduce(reduce(d) + reduce(m) + reduce(y));
+function countSpecificDay(start: Date, end: Date, targetDay: number): number {
+  if (start > end) return 0;
+  const d1 = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  const d2 = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+  const diffDays = Math.floor((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+  let count = Math.floor(diffDays / 7);
+  const remainder = diffDays % 7;
+  const startDay = d1.getDay();
+  for (let i = 0; i <= remainder; i++) {
+    if ((startDay + i) % 7 === targetDay) {
+      count++;
+      break;
+    }
+  }
+  return count;
 }
 
 /**
@@ -123,6 +104,23 @@ function getLifePathNumber(dateOfBirth: Date): number {
 export function calculateAge(dateOfBirth: Date): AgeResult {
   const now = new Date();
   const birth = new Date(dateOfBirth);
+
+  if (isNaN(birth.getTime()) || birth.getTime() > now.getTime()) {
+    const validBirth = isNaN(birth.getTime()) ? now : birth;
+    return {
+      years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0,
+      totalDays: 0, totalWeeks: 0, totalMonths: 0, totalHours: 0, totalMinutes: 0, totalSeconds: 0,
+      nextBirthday: validBirth,
+      daysUntilBirthday: 0, hoursUntilBirthday: 0, minutesUntilBirthday: 0, secondsUntilBirthday: 0,
+      isBirthdayToday: false,
+      birthDayOfWeek: DAYS_EN[validBirth.getDay()],
+      birthDayOfWeekBn: DAYS_BN[validBirth.getDay()],
+      isLeapYear: isLeapYear(validBirth.getFullYear()),
+      dayOfTheYear: 0, daysLeftInYear: 0,
+      totalFridays: 0, totalWeekends: 0, totalRamadans: 0, totalSunrises: 0, totalFullMoons: 0,
+      sleepingHours: 0, totalMeals: 0, totalHeartbeats: 0, totalBreaths: 0,
+    };
+  }
 
   let years = now.getFullYear() - birth.getFullYear();
   let months = now.getMonth() - birth.getMonth();
@@ -149,6 +147,18 @@ export function calculateAge(dateOfBirth: Date): AgeResult {
   const totalMinutes = Math.floor(totalMs / (1000 * 60));
   const totalSeconds = Math.floor(totalMs / 1000);
 
+  // Detailed calendar & day statistics
+  const totalFridays = countSpecificDay(birth, now, 5);
+  const totalSaturdays = countSpecificDay(birth, now, 6);
+  const totalWeekends = totalFridays + totalSaturdays;
+  const totalRamadans = Math.max(0, years);
+  const totalSunrises = totalDays;
+  const totalFullMoons = Math.floor(totalDays / 29.53059);
+  const sleepingHours = totalDays * 8;
+  const totalMeals = totalDays * 3;
+  const totalHeartbeats = totalMinutes * 72;
+  const totalBreaths = totalMinutes * 16;
+
   // Next birthday
   let nextBirthday = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
   const isBirthdayToday = now.getMonth() === birth.getMonth() && now.getDate() === birth.getDate();
@@ -162,9 +172,6 @@ export function calculateAge(dateOfBirth: Date): AgeResult {
   const minutesUntilBirthday = isBirthdayToday ? 0 : Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
   const secondsUntilBirthday = isBirthdayToday ? 0 : Math.floor((remainingMs % (1000 * 60)) / 1000);
 
-  const zodiac = getZodiac(birth);
-  const chineseYear = birth.getFullYear() % 12;
-
   return {
     years, months, days, hours, minutes, seconds,
     totalDays, totalWeeks, totalMonths, totalHours, totalMinutes, totalSeconds,
@@ -173,14 +180,17 @@ export function calculateAge(dateOfBirth: Date): AgeResult {
     birthDayOfWeek: DAYS_EN[birth.getDay()],
     birthDayOfWeekBn: DAYS_BN[birth.getDay()],
     isLeapYear: isLeapYear(birth.getFullYear()),
-    zodiacSign: zodiac.sign,
-    zodiacSignBn: zodiac.signBn,
-    chineseZodiac: `${CHINESE_ZODIAC[chineseYear]} (${CHINESE_ZODIAC_BN[chineseYear]})`,
-    birthStone: BIRTH_STONES[birth.getMonth() + 1],
-    birthFlower: BIRTH_FLOWERS[birth.getMonth() + 1],
-    lifePathNumber: getLifePathNumber(birth),
     dayOfTheYear: getDayOfYear(birth),
     daysLeftInYear: isLeapYear(birth.getFullYear()) ? 366 - getDayOfYear(birth) : 365 - getDayOfYear(birth),
+    totalFridays,
+    totalWeekends,
+    totalRamadans,
+    totalSunrises,
+    totalFullMoons,
+    sleepingHours,
+    totalMeals,
+    totalHeartbeats,
+    totalBreaths,
   };
 }
 
@@ -208,16 +218,15 @@ export function calculateDateDifference(startDate: Date, endDate: Date): DateDif
   const totalHours = Math.floor(totalMs / (1000 * 60 * 60));
   const totalMinutes = Math.floor(totalMs / (1000 * 60));
 
-  // Count weekend days
-  let weekendDays = 0;
-  let weekdays = 0;
-  const current = new Date(start);
-  while (current < end) {
-    const day = current.getDay();
+  // Count weekend days in O(1) time
+  let weekendDays = totalWeeks * 2;
+  const remDays = totalDays % 7;
+  const startDay = start.getDay();
+  for (let i = 0; i < remDays; i++) {
+    const day = (startDay + i) % 7;
     if (day === 0 || day === 6) weekendDays++;
-    else weekdays++;
-    current.setDate(current.getDate() + 1);
   }
+  const weekdays = Math.max(0, totalDays - weekendDays);
 
   return { years, months, days, totalDays, totalWeeks, totalHours, totalMinutes, weekendDays, weekdays };
 }
@@ -236,18 +245,18 @@ const BD_JOB_QUOTAS: {
   icon: string;
 }[] = [
   // === Government Administration ===
-  { id: 'general', quotaType: 'General', quotaTypeBn: 'সাধারণ', category: 'Government', ageLimit: 30, description: 'General quota for all government jobs', descriptionBn: 'সকল সরকারি চাকরির সাধারণ কোটা', icon: '🏛️' },
-  { id: 'freedom-fighter', quotaType: 'Freedom Fighter Children', quotaTypeBn: 'মুক্তিযোদ্ধা সন্তান', category: 'Government', ageLimit: 32, description: 'Children of freedom fighters get extended age', descriptionBn: 'মুক্তিযোদ্ধার সন্তানদের জন্য বয়সসীমা বাড়ানো হয়েছে', icon: '🎖️' },
-  { id: 'women', quotaType: 'Women Quota', quotaTypeBn: 'নারী কোটা', category: 'Government', ageLimit: 30, description: 'Women reservation in government jobs', descriptionBn: 'সরকারি চাকরিতে নারী রিজার্ভেশন', icon: '👩' },
-  { id: 'district', quotaType: 'District Quota', quotaTypeBn: 'জেলা কোটা', category: 'Government', ageLimit: 30, description: 'District-based reservation quota', descriptionBn: 'জেলা ভিত্তিক রিজার্ভেশন কোটা', icon: '🗺️' },
-  { id: 'disabled', quotaType: 'Disabled Quota', quotaTypeBn: 'প্রতিবন্ধী কোটা', category: 'Government', ageLimit: 32, description: 'Persons with disabilities quota', descriptionBn: 'প্রতিবন্ধী ব্যক্তিদের কোটা', icon: '♿' },
-  { id: 'ethnic', quotaType: 'Small Ethnic Group', quotaTypeBn: 'ক্ষুদ্র নৃ-গোষ্ঠী', category: 'Government', ageLimit: 32, description: 'Indigenous community quota', descriptionBn: 'আদিবাসী সম্প্রদায়ের কোটা', icon: '🌍' },
+  { id: 'general', quotaType: 'General (সাধারণ - নতুন ৩২ বছর)', quotaTypeBn: 'সাধারণ (৩২ বছর)', category: 'Government', ageLimit: 32, description: 'General govt job entry (Gazette 32 Years Ordinance)', descriptionBn: 'সরকারি চাকরিতে প্রবেশের সর্বোচ্চ বয়সসীমা (নতুন অধ্যাদেশ ৩২ বছর)', icon: '🏛️' },
+  { id: 'freedom-fighter', quotaType: 'Freedom Fighter Children', quotaTypeBn: 'মুক্তিযোদ্ধা সন্তান (৩২ বছর)', category: 'Government', ageLimit: 32, description: 'Children of freedom fighters quota (32 Years)', descriptionBn: 'মুক্তিযোদ্ধার সন্তানদের জন্য বয়সসীমা ৩২ বছর', icon: '🎖️' },
+  { id: 'women', quotaType: 'Women Quota', quotaTypeBn: 'নারী কোটা (৩২ বছর)', category: 'Government', ageLimit: 32, description: 'Women reservation in government jobs (32 Years)', descriptionBn: 'সরকারি চাকরিতে নারী কোটা ৩২ বছর', icon: '👩' },
+  { id: 'district', quotaType: 'District Quota', quotaTypeBn: 'জেলা কোটা (৩২ বছর)', category: 'Government', ageLimit: 32, description: 'District-based reservation quota (32 Years)', descriptionBn: 'জেলা ভিত্তিক কোটা ৩২ বছর', icon: '🗺️' },
+  { id: 'disabled', quotaType: 'Disabled Quota', quotaTypeBn: 'প্রতিবন্ধী কোটা (৩২ বছর)', category: 'Government', ageLimit: 32, description: 'Persons with disabilities quota', descriptionBn: 'প্রতিবন্ধী ব্যক্তিদের কোটা ৩২ বছর', icon: '♿' },
+  { id: 'ethnic', quotaType: 'Small Ethnic Group', quotaTypeBn: 'ক্ষুদ্র নৃ-গোষ্ঠী (৩২ বছর)', category: 'Government', ageLimit: 32, description: 'Indigenous community quota', descriptionBn: 'ক্ষুদ্র নৃ-গোষ্ঠী কোটা ৩২ বছর', icon: '🌍' },
   // === BCS ===
-  { id: 'bcs-general', quotaType: 'BCS Cadre (General)', quotaTypeBn: 'বিসিএস ক্যাডার (সাধারণ)', category: 'BCS', ageLimit: 30, description: 'Bangladesh Civil Service general cadre', descriptionBn: 'বাংলাদেশ সিভিল সার্ভিস সাধারণ ক্যাডার', icon: '📋' },
-  { id: 'bcs-ff', quotaType: 'BCS (Freedom Fighter)', quotaTypeBn: 'বিসিএস (মুক্তিযোদ্ধা)', category: 'BCS', ageLimit: 32, description: 'BCS freedom fighter children quota', descriptionBn: 'বিসিএস মুক্তিযোদ্ধা সন্তান কোটা', icon: '🎖️' },
+  { id: 'bcs-general', quotaType: 'BCS Cadre (General - ৩২ বছর)', quotaTypeBn: 'বিসিএস ক্যাডার (৩২ বছর)', category: 'BCS', ageLimit: 32, description: 'BCS general cadre (Updated 32 Years)', descriptionBn: 'বাংলাদেশ সিভিল সার্ভিস সাধারণ ক্যাডার (৩২ বছর)', icon: '📋' },
+  { id: 'bcs-ff', quotaType: 'BCS (Freedom Fighter)', quotaTypeBn: 'বিসিএস (মুক্তিযোদ্ধা)', category: 'BCS', ageLimit: 32, description: 'BCS freedom fighter children quota', descriptionBn: 'বিসিএস মুক্তিযোদ্ধা সন্তান কোটা (৩২ বছর)', icon: '🎖️' },
   // === Banking ===
-  { id: 'bank-govt', quotaType: 'Govt Bank (Sonali, Agrani, Janata)', quotaTypeBn: 'সরকারি ব্যাংক', category: 'Banking', ageLimit: 30, description: 'Government bank officer positions', descriptionBn: 'সরকারি ব্যাংক অফিসার পদ', icon: '🏦' },
-  { id: 'bank-bkash', quotaType: 'Bank (Specialized)', quotaTypeBn: 'বিশেষায়িত ব্যাংক', category: 'Banking', ageLimit: 30, description: 'Specialized banks like BKB, RAKUB', descriptionBn: 'বিশেষায়িত ব্যাংক (বিকেবি, রাকুব)', icon: '🏦' },
+  { id: 'bank-govt', quotaType: 'Govt Bank (Sonali, Agrani, Janata)', quotaTypeBn: 'সরকারি ব্যাংক (৩২ বছর)', category: 'Banking', ageLimit: 32, description: 'Government bank officer positions (32 Years)', descriptionBn: 'সরকারি ব্যাংক অফিসার পদ (৩২ বছর)', icon: '🏦' },
+  { id: 'bank-bkash', quotaType: 'Bank (Specialized)', quotaTypeBn: 'বিশেষায়িত ব্যাংক', category: 'Banking', ageLimit: 32, description: 'Specialized banks like BKB, RAKUB', descriptionBn: 'বিশেষায়িত ব্যাংক (বিকেবি, রাকুব)', icon: '🏦' },
   // === Education ===
   { id: 'teacher-ntrca', quotaType: 'Teacher Registration (NTRCA)', quotaTypeBn: 'শিক্ষক নিবন্ধন (এনটিআরসিএ)', category: 'Education', ageLimit: 35, description: 'Non-government teacher registration', descriptionBn: 'অসরকারি শিক্ষক নিবন্ধন', icon: '📚' },
   { id: 'teacher-govt', quotaType: 'Govt Teacher (School/College)', quotaTypeBn: 'সরকারি শিক্ষক', category: 'Education', ageLimit: 30, description: 'Government school and college teacher', descriptionBn: 'সরকারি স্কুল ও কলেজ শিক্ষক', icon: '🏫' },
@@ -310,10 +319,22 @@ export function calculateJobQuota(dateOfBirth: Date): JobQuotaResult[] {
     let remainingDays = 0;
 
     if (isEligible) {
-      const totalRemainingDays = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
-      remainingYears = Math.floor(totalRemainingDays / 365);
-      remainingMonths = Math.floor((totalRemainingDays % 365) / 30);
-      remainingDays = totalRemainingDays % 30;
+      let ry = deadlineDate.getFullYear() - now.getFullYear();
+      let rm = deadlineDate.getMonth() - now.getMonth();
+      let rd = deadlineDate.getDate() - now.getDate();
+
+      if (rd < 0) {
+        const prevMonth = new Date(deadlineDate.getFullYear(), deadlineDate.getMonth(), 0);
+        rd += prevMonth.getDate();
+        rm--;
+      }
+      if (rm < 0) {
+        rm += 12;
+        ry--;
+      }
+      remainingYears = Math.max(0, ry);
+      remainingMonths = Math.max(0, rm);
+      remainingDays = Math.max(0, rd);
     }
 
     let urgencyLevel: 'safe' | 'warning' | 'critical' | 'expired';

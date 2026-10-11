@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,14 +21,14 @@ function LogoImage({ size }: { size: 'sm' | 'lg' }) {
   }
 
   return (
-    <div className={`relative ${cls} overflow-hidden rounded-xl`}>
+    <div className={`relative ${cls} shrink-0 overflow-hidden rounded-xl border border-sky-400/30 bg-[#071329] shadow-md shadow-sky-500/20`}>
       <Image
-        src="/assets/logo.png"
-        alt="VHIR Tech"
+        src="/assets/app-logo.svg"
+        alt="Age Calculator BD"
         width={dim}
         height={dim}
-        className="h-full w-full object-cover"
-        onError={() => setImgError(true)}
+        unoptimized
+        className="h-full w-full object-contain p-0.5"
       />
     </div>
   );
@@ -44,11 +44,14 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <div className="mb-3 flex items-center gap-2">
+            <div className="mb-3 flex items-center gap-2.5">
               <LogoImage size="sm" />
-              <span className="text-base font-bold text-white">
-                VHIR <span className="text-teal-400">Tech</span>
-              </span>
+              <div>
+                <span className="text-base font-extrabold text-white block">
+                  Age Calculator <span className="text-sky-400">BD</span>
+                </span>
+                <span className="text-[10px] text-slate-400">Developed by VHIR Tech</span>
+              </div>
             </div>
             <p className="mb-3 text-xs leading-relaxed text-slate-400">
               Smart Age Calculator BD — বাংলাদেশের সবচেয়ে নির্ভরযোগ্য বয়স ক্যালকুলেটর এবং সরকারি চাকরির বয়সসীমা ট্র্যাকার।

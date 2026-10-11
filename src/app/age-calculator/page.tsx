@@ -6,7 +6,7 @@ import AgeCalculator from '@/components/AgeCalculator';
 
 export const metadata: Metadata = {
   title: 'Age Calculator - Calculate Your Exact Age in Years, Months, Days, Hours',
-  description: 'Calculate your exact age in years, months, days, hours, minutes and seconds. Get birth details, zodiac sign, Chinese zodiac, birth stone, life path number, and 25+ fascinating facts. Free online age calculator for Bangladesh.',
+  description: 'Calculate your exact age in years, months, days, hours, minutes and seconds. Get birth details, Islamic milestones (Fridays, Ramadans), physiological milestones, and 25+ fascinating facts. Free online age calculator for Bangladesh.',
   alternates: { canonical: 'https://age.vhirtech.shop/age-calculator' },
 };
 
@@ -23,10 +23,10 @@ export default function AgeCalculatorPage() {
                 🧮 Age Calculator BD
               </h1>
               <p className="mx-auto max-w-2xl text-sm text-slate-400">
-                Calculate your exact age in years, months, days, hours, minutes &amp; seconds. Get birth details, zodiac sign, Chinese zodiac, birth stone, birth flower, life path number, and 25+ fascinating facts about your life.
+                Calculate your exact age in years, months, days, hours, minutes &amp; seconds. Discover life milestones, passed Fridays, blessed Ramadans, and 25+ fascinating life statistics.
               </p>
               <p className="mx-auto mt-1 max-w-xl text-xs text-slate-500">
-                আপনার সঠিক বয়স গণনা করুন — বছর, মাস, দিন, ঘণ্টা, মিনিট ও সেকেন্ডে। জন্ম বিবরণ, রাশি, জন্ম রত্ন এবং আপনার জীবনের ২৫+ চমৎকার তথ্য জানুন।
+                আপনার সঠিক বয়স গণনা করুন — বছর, মাস, দিন, ঘণ্টা, মিনিট ও সেকেন্ডে। অতিক্রান্ত জুমার দিন, প্রাপ্ত রমজান এবং জীবনের ২৫+ চমৎকার প্রাকৃতিক তথ্য জানুন।
               </p>
             </div>
             <AgeCalculator />
