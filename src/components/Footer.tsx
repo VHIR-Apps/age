@@ -23,7 +23,7 @@ function LogoImage({ size }: { size: 'sm' | 'lg' }) {
   return (
     <div className={`relative ${cls} shrink-0 overflow-hidden rounded-xl border border-sky-400/30 bg-[#071329] shadow-md shadow-sky-500/20`}>
       <Image
-        src="/assets/app-logo.svg"
+        src="/assets/logo-icon.png"
         alt="Age Calculator BD"
         width={dim}
         height={dim}

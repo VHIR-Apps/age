@@ -549,9 +549,9 @@ export default function SocialCardModal({ isOpen, onClose, ageResult, dob }: Soc
 
     const p = palettes[theme];
 
-    // Preload Brand Logo (Strictly fresh brand chronometer with cache busting) & User Photo
+    // Preload Brand Logo (Exact 3D Chronometer Artwork) & User Photo
     const [logoImg, userImg] = await Promise.all([
-      loadImage('/assets/age-calc-brand-logo.png?v=3').then(async (img) => img || (await loadImage('/assets/app-logo.svg')) || (await loadImage('/assets/logo.png'))),
+      loadImage('/assets/logo-icon.png?v=5').then(async (img) => img || (await loadImage('/assets/app-logo.png')) || (await loadImage('/assets/logo.png'))),
       userPhoto ? loadImage(userPhoto) : Promise.resolve(null),
     ]);
 
