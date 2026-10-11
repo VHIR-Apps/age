@@ -549,9 +549,9 @@ export default function SocialCardModal({ isOpen, onClose, ageResult, dob }: Soc
 
     const p = palettes[theme];
 
-    // Preload App Logo (Strictly PNG format with fallback) & User Photo
+    // Preload Brand Logo (Strictly fresh brand chronometer with cache busting) & User Photo
     const [logoImg, userImg] = await Promise.all([
-      loadImage('/assets/logo.png').then(async (img) => img || (await loadImage('/assets/app-logo.png')) || (await loadImage('/assets/logo.svg'))),
+      loadImage('/assets/age-calc-brand-logo.png?v=3').then(async (img) => img || (await loadImage('/assets/app-logo.svg')) || (await loadImage('/assets/logo.png'))),
       userPhoto ? loadImage(userPhoto) : Promise.resolve(null),
     ]);
 
@@ -596,7 +596,7 @@ export default function SocialCardModal({ isOpen, onClose, ageResult, dob }: Soc
     // 4. Outer Metallic Double Border & Corner Brackets
     const framePad = 32;
     ctx.save();
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
     ctx.strokeStyle = p.border;
     ctx.beginPath();
     ctx.roundRect(framePad, framePad, width - framePad * 2, height - framePad * 2, 28);
@@ -612,31 +612,18 @@ export default function SocialCardModal({ isOpen, onClose, ageResult, dob }: Soc
     drawCornerBrackets(ctx, framePad + 14, framePad + 14, width - (framePad + 14) * 2, height - (framePad + 14) * 2, 28, p.gold);
     ctx.restore();
 
-    // 5. Studio Header Area with High-Res PNG Logo
-    const headerY = 58;
+    // 5. Studio Header Area with Real Chronometer Brand Logo
+    const headerY = 56;
     if (logoImg) {
       ctx.save();
-      // Glass squircle container
-      ctx.fillStyle = p.badgeBg;
-      ctx.beginPath();
-      ctx.roundRect(64, headerY, 78, 78, 20);
-      ctx.fill();
-
-      // Glowing metallic border around logo
-      ctx.lineWidth = 2.5;
-      ctx.strokeStyle = p.accent1;
-      ctx.stroke();
-
-      // Draw PNG logo crisply
-      ctx.beginPath();
-      ctx.roundRect(66, headerY + 2, 74, 74, 18);
-      ctx.clip();
-      ctx.drawImage(logoImg, 66, headerY + 2, 74, 74);
+      ctx.shadowColor = p.glow;
+      ctx.shadowBlur = 16;
+      ctx.drawImage(logoImg, 64, headerY, 82, 82);
       ctx.restore();
     }
 
     // Studio Typography
-    const titleX = logoImg ? 158 : 68;
+    const titleX = logoImg ? 162 : 68;
     ctx.textAlign = 'left';
     ctx.fillStyle = p.textLight;
     ctx.font = '900 28px system-ui, -apple-system, sans-serif';
@@ -644,7 +631,7 @@ export default function SocialCardModal({ isOpen, onClose, ageResult, dob }: Soc
 
     ctx.fillStyle = p.accent1;
     ctx.font = 'bold 14px system-ui, sans-serif';
-    ctx.fillText('✨ OFFICIAL LIFE CHRONICLE & MILESTONES ✨', titleX, headerY + 51);
+    ctx.fillText('✨ অফিশিয়াল জীবন খতিয়ান ও মাইলফলক ✨', titleX, headerY + 51);
 
     ctx.fillStyle = p.textMuted;
     ctx.font = '600 13px system-ui, sans-serif';
@@ -688,21 +675,27 @@ export default function SocialCardModal({ isOpen, onClose, ageResult, dob }: Soc
         ctx.stroke();
         ctx.restore();
       } else {
+        // Luxury Monogram Crest
         ctx.save();
         const avGrad = ctx.createLinearGradient(avX, avY, avX + avSize, avY + avSize);
-        avGrad.addColorStop(0, p.accent1);
-        avGrad.addColorStop(0.5, p.gold);
-        avGrad.addColorStop(1, p.accent2);
+        avGrad.addColorStop(0, p.isLight ? '#e2e8f0' : '#08162f');
+        avGrad.addColorStop(1, p.isLight ? '#cbd5e1' : '#030814');
         ctx.fillStyle = avGrad;
         ctx.beginPath();
         ctx.arc(540, avY + avSize / 2, avSize / 2, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#020612';
-        ctx.font = '900 68px system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        const initial = name.trim() ? name.trim().charAt(0).toUpperCase() : '★';
-        ctx.fillText(initial, 540, avY + avSize / 2 + 24);
+        ctx.lineWidth = 3.5;
+        ctx.strokeStyle = p.gold;
+        ctx.stroke();
+
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = p.accent1;
+        ctx.beginPath();
+        ctx.arc(540, avY + avSize / 2, avSize / 2 - 7, 0, Math.PI * 2);
+        ctx.stroke();
+
+        drawSparkle(ctx, 540, avY + avSize / 2, 28, p.gold);
         ctx.restore();
       }
 
@@ -923,21 +916,27 @@ export default function SocialCardModal({ isOpen, onClose, ageResult, dob }: Soc
         ctx.stroke();
         ctx.restore();
       } else {
+        // Luxury Monogram Crest
         ctx.save();
         const avGrad = ctx.createLinearGradient(avatarX, profY, avatarX + avatarSize, profY + avatarSize);
-        avGrad.addColorStop(0, p.accent1);
-        avGrad.addColorStop(0.5, p.gold);
-        avGrad.addColorStop(1, p.accent2);
+        avGrad.addColorStop(0, p.isLight ? '#e2e8f0' : '#08162f');
+        avGrad.addColorStop(1, p.isLight ? '#cbd5e1' : '#030814');
         ctx.fillStyle = avGrad;
         ctx.beginPath();
         ctx.arc(avatarX + avatarSize / 2, profY + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#020612';
-        ctx.font = '900 48px system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        const initial = name.trim() ? name.trim().charAt(0).toUpperCase() : '★';
-        ctx.fillText(initial, avatarX + avatarSize / 2, profY + avatarSize / 2 + 16);
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = p.gold;
+        ctx.stroke();
+
+        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = p.accent1;
+        ctx.beginPath();
+        ctx.arc(avatarX + avatarSize / 2, profY + avatarSize / 2, avatarSize / 2 - 5, 0, Math.PI * 2);
+        ctx.stroke();
+
+        drawSparkle(ctx, avatarX + avatarSize / 2, profY + avatarSize / 2, 18, p.gold);
         ctx.restore();
       }
 
